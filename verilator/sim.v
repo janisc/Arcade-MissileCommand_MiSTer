@@ -99,7 +99,7 @@ wire		vtb_dir1;
 wire		vtb_clk1;
 wire		htb_dir1;
 wire		htb_clk1;
-reg [1:0]	mouse_speed /*verilator public_flat*/ = 2'b00;
+reg [2:0]	mouse_speed /*verilator public_flat*/ = 3'b000;
 reg			joystick_sensitivity /*verilator public_flat*/ = 1'b0;
 
 trackball trackball

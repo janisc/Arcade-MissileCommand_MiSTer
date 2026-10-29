@@ -27,7 +27,7 @@ module trackball(
 	input [15:0]	joystick_analog,
 	input			joystick_mode, // 0 = digital, 1 = analog
 	input			joystick_sensitivity,
-	input  [1:0]	mouse_speed,
+	input  [2:0]	mouse_speed,
 	input [24:0]	ps2_mouse,
 	output reg		v_dir,
 	output reg		v_clk,
@@ -154,20 +154,31 @@ begin
 		mouse_mag_x = mouse_sign_x ? -ps2_mouse[15:8] : ps2_mouse[15:8];
 		mouse_mag_y = mouse_sign_y ? -ps2_mouse[23:16] : ps2_mouse[23:16];
 
-		if(mouse_speed == 2'd0) // 25% speed
+		if(mouse_speed == 3'd0) // 25% speed
 		begin
 			mouse_mag_x = mouse_mag_x >> 2;
 			mouse_mag_y = mouse_mag_y >> 2;
 		end
-		else if(mouse_speed == 2'd1) // 50% speed
+		else if(mouse_speed == 3'd1) // 50% speed
 		begin
 			mouse_mag_x = mouse_mag_x >> 1;
 			mouse_mag_y = mouse_mag_y >> 1;
 		end
-		else if(mouse_speed == 2'd3) // 200% speed
+		// Faster speeds clamp to the 8-bit maximum instead of wrapping around
+		else if(mouse_speed == 3'd3) // 200% speed
 		begin
-			mouse_mag_x = mouse_mag_x << 1;
-			mouse_mag_y = mouse_mag_y << 1;
+			mouse_mag_x = mouse_mag_x[7] ? 8'd255 : mouse_mag_x << 1;
+			mouse_mag_y = mouse_mag_y[7] ? 8'd255 : mouse_mag_y << 1;
+		end
+		else if(mouse_speed == 3'd4) // 400% speed
+		begin
+			mouse_mag_x = |mouse_mag_x[7:6] ? 8'd255 : mouse_mag_x << 2;
+			mouse_mag_y = |mouse_mag_y[7:6] ? 8'd255 : mouse_mag_y << 2;
+		end
+		else if(mouse_speed == 3'd5) // 800% speed
+		begin
+			mouse_mag_x = |mouse_mag_x[7:5] ? 8'd255 : mouse_mag_x << 3;
+			mouse_mag_y = |mouse_mag_y[7:5] ? 8'd255 : mouse_mag_y << 3;
 		end
 		
 		trackball_falloff <= {trackball_falloff_width{1'b1}};

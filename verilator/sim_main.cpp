@@ -617,7 +617,7 @@ int main(int argc, char** argv, char** env) {
 		ImGui::SliderInt("Coins per play", &dip_coinage, 0, 3);
 		top->emu__DOT__dip_coinage = dip_coinage;
 
-		ImGui::SliderInt("Mouse speed", &mouse_speed, 0, 3);
+		ImGui::SliderInt("Mouse speed", &mouse_speed, 0, 5);
 		top->emu__DOT__mouse_speed = mouse_speed;
 
 		ImGui::SliderInt("Joystick sensitivity", &joystick_sensitivity, 0, 1);
